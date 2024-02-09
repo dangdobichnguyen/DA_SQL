@@ -26,7 +26,7 @@ THEN time_spent ELSE 0 END) * 100.0 / SUM(time_spent),2) AS open_perc
 FROM activities AS a 
 LEFT JOIN age_breakdown AS b 
 ON a.user_id = b.user_id 
-WHERE activity_type IN ('send','open')
+WHERE a.activity_type IN ('send','open')
 GROUP BY b.age_bucket 
   
 --ex4:
