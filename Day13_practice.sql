@@ -9,6 +9,16 @@ SELECT COUNT(*)
 FROM duplicate_companies
   
 --ex2: 
+WITH newtable AS
+(SELECT category, product,
+SUM(spend) AS total_spend,
+RANK() OVER(PARTITION BY category ORDER BY SUM(spend) DESC) AS rank
+FROM product_spend
+WHERE EXTRACT(year FROM transaction_date)=2022
+GROUP BY category, product)
+SELECT category, product, total_spend 
+FROM newtable
+WHERE RANK<=2
 
 --ex3:
 WITH member_count AS
@@ -27,7 +37,19 @@ LEFT JOIN page_likes AS b
 ON a.page_id=b.page_id
 WHERE b.page_id IS NULL 
 --ex5: 
+WITH cte1
+AS (SELECT DISTINCT user_id , 
+EXTRACT(MONTH from event_date)  FROM user_actions
+WHERE EXTRACT(MONTH FROM event_date) = '6')
+, cte2 
+AS (SELECT DISTINCT user_id , 
+EXTRACT(MONTH from event_date)  FROM user_actions
+WHERE EXTRACT(MONTH FROM event_date) = '7')
 
+SELECT 7 AS mth,
+COUNT (cte2.user_id) AS monthly_active_users
+FROM cte1 INNER JOIN cte2 ON cte2.user_id = cte1.user_id
+GROUP BY mth
 --ex: 
 SELECT SUBSTRING(trans_date,1,7) AS month, country, 
 COUNT(id) AS trans_count, 
