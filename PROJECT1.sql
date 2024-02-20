@@ -62,7 +62,10 @@ AND ORDERDATE IS NOT NULL
 -- thêm cột 
 ALTER TABLE public.sales_dataset_rfm_prj
 ADD COLUMN contactfirstname varchar	
+UPDATE public.sales_dataset_rfm_prj
+SET contactfirstname= LEFT (contactfullname, POSITION('-' IN contactfullname)-1)
 
+	
 ALTER TABLE public.sales_dataset_rfm_prj
 ADD COLUMN contactlastname varchar
 INSERT INTO public.sales_dataset_rfm_pr
